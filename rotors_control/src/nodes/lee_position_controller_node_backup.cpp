@@ -31,8 +31,6 @@ LeePositionControllerNode::LeePositionControllerNode(
   const ros::NodeHandle& nh, const ros::NodeHandle& private_nh)
   :nh_(nh),
    private_nh_(private_nh){
-
-  is_turnoff = true;
   InitializeParams();
 
   cmd_pose_sub_ = nh_.subscribe(
@@ -45,13 +43,12 @@ LeePositionControllerNode::LeePositionControllerNode(
 
   odometry_sub_ = nh_.subscribe(mav_msgs::default_topics::ODOMETRY, 1,
                                &LeePositionControllerNode::OdometryCallback, this);
-  turn_off_motor_ = nh_.subscribe(mav_msgs::default_topics::TURNOFFMOTOR, 1,
-                              &LeePositionControllerNode::TurnOffMotorCallback, this);
 
   motor_velocity_reference_pub_ = nh_.advertise<mav_msgs::Actuators>(
       mav_msgs::default_topics::COMMAND_ACTUATORS, 1);
 
-  command_timer_ = nh_.createTimer(ros::Duration(0), &LeePositionControllerNode::TimedCommandCallback, this,true, false);
+  command_timer_ = nh_.createTimer(ros::Duration(0), &LeePositionControllerNode::TimedCommandCallback, this,
+                                  true, false);
 }
 
 LeePositionControllerNode::~LeePositionControllerNode() { }
@@ -188,22 +185,11 @@ void LeePositionControllerNode::OdometryCallback(const nav_msgs::OdometryConstPt
   mav_msgs::ActuatorsPtr actuator_msg(new mav_msgs::Actuators);
 
   actuator_msg->angular_velocities.clear();
-
-  if (!is_turnoff){
-     for (int i = 0; i < ref_rotor_velocities.size(); i++)
-       actuator_msg->angular_velocities.push_back(ref_rotor_velocities[i]);
-  }  else{
-     for (int i = 0; i < ref_rotor_velocities.size(); i++)
-       actuator_msg->angular_velocities.push_back(0);
-  }
-
+  for (int i = 0; i < ref_rotor_velocities.size(); i++)
+    actuator_msg->angular_velocities.push_back(ref_rotor_velocities[i]);
   actuator_msg->header.stamp = odometry_msg->header.stamp;
-  motor_velocity_reference_pub_.publish(actuator_msg);
-}
 
-void LeePositionControllerNode::TurnOffMotorCallback(const std_msgs::BoolConstPtr& turnoff_msg){
-    ROS_INFO_ONCE("LeePositionController got first turnoff message.");
-    is_turnoff = turnoff_msg->data; 
+  motor_velocity_reference_pub_.publish(actuator_msg);
 }
 
 }

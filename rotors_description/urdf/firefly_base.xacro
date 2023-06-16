@@ -20,6 +20,7 @@
 -->
 
 <robot name="firefly" xmlns:xacro="http://ros.org/wiki/xacro">
+  
   <xacro:include filename="$(find rotors_description)/urdf/component_snippets.xacro" />
   <!-- Instantiate firefly "mechanics" -->
   <xacro:include filename="$(find rotors_description)/urdf/firefly.xacro" />

@@ -30,7 +30,6 @@
 #include <mav_msgs/AttitudeThrust.h>
 #include <mav_msgs/eigen_mav_msgs.h>
 #include <nav_msgs/Odometry.h>
-#include <std_msgs/Bool.h>
 #include <ros/callback_queue.h>
 #include <ros/ros.h>
 #include <trajectory_msgs/MultiDOFJointTrajectory.h>
@@ -61,15 +60,12 @@ class LeePositionControllerNode {
   ros::Subscriber cmd_multi_dof_joint_trajectory_sub_;
   ros::Subscriber cmd_pose_sub_;
   ros::Subscriber odometry_sub_;
-  ros::Subscriber turn_off_motor_;
 
   ros::Publisher motor_velocity_reference_pub_;
 
   mav_msgs::EigenTrajectoryPointDeque commands_;
   std::deque<ros::Duration> command_waiting_times_;
   ros::Timer command_timer_;
-
-  bool is_turnoff;
 
   void TimedCommandCallback(const ros::TimerEvent& e);
 
@@ -80,9 +76,6 @@ class LeePositionControllerNode {
       const geometry_msgs::PoseStampedConstPtr& pose_msg);
 
   void OdometryCallback(const nav_msgs::OdometryConstPtr& odometry_msg);
-
-  void TurnOffMotorCallback(
-      const std_msgs::BoolConstPtr& turnoff_msg);
 };
 }
 

@@ -45,7 +45,6 @@ if(NO_ROS)
 endif()
 
 find_package(catkin REQUIRED COMPONENTS gazebo_msgs geometry_msgs mav_msgs roscpp sensor_msgs)
-
 catkin_package(
   CATKIN_DEPENDS
     gazebo_msgs
@@ -68,6 +67,7 @@ add_dependencies(waypoint_publisher_file ${catkin_EXPORTED_TARGETS})
 add_executable(hovering_example src/hovering_example.cpp)
 target_link_libraries(hovering_example ${catkin_LIBRARIES})
 add_dependencies(hovering_example ${catkin_EXPORTED_TARGETS})
+
 
 foreach(dir launch models resource worlds)
    install(DIRECTORY ${dir}/

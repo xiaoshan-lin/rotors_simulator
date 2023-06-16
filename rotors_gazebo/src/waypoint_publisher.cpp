@@ -79,7 +79,7 @@ int main(int argc, char** argv) {
 
   trajectory_pub.publish(trajectory_msg);
 
-  ros::spinOnce();
+  //ros::spinOnce();
   ros::shutdown();
 
   return 0;
